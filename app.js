@@ -2,7 +2,7 @@
 member = new Mongo.Collection("member");
 user = new Mongo.Collection("user");
 
-user.insert({ pseudo : 'root', pass : 'toor' });
+user.insert({pseudo: 'root', pass: 'toor'});
 
 if (Meteor.isServer) {
     Meteor.startup
@@ -20,11 +20,19 @@ if (Meteor.isClient) {
     FlowRouter.route('/', {
         name: 'home',
         action: function (params) {
-            if (Session.get('user_id') != null){
+            if (Session.get('user_id') != null) {
                 FlowRouter.go('member');
-            }else{
+            } else {
                 BlazeLayout.render('home', {main: ''});
             }
+        }
+    });
+
+    FlowRouter.route('/logout', {
+        name: 'home',
+        action: function (params) {
+            delete Session.keys['user_id'];
+            FlowRouter.go('/');
         }
     });
 
@@ -32,14 +40,21 @@ if (Meteor.isClient) {
         "click #connect": function (e, t) {
             dataPseudo = t.find("#pseudo").value;
             dataPass = t.find("#password").value;
-            userCurrent =  user.findOne({ pseudo : dataPseudo, pass : dataPass });
-            if (userCurrent != null){
+            userCurrent = user.findOne({pseudo: dataPseudo, pass: dataPass});
+            if (userCurrent != null) {
                 Session.set('user_id', userCurrent._id);
                 FlowRouter.go('member');
-            }else{
-                fail = true;
-                return fail;
+            } else {
+                FlowRouter.go('/error-login');
             }
+
+        }
+    });
+
+    FlowRouter.route('/error-login', {
+        name: 'error_login',
+        action: function (params) {
+            BlazeLayout.render('error_login', {main: ''});
         }
     });
 
@@ -47,10 +62,10 @@ if (Meteor.isClient) {
         name: 'member_spe',
         action: function (params) {
 
-            if (Session.get('user_id') != null){
+            if (Session.get('user_id') != null) {
                 Session.set("member_id", params._id);
                 BlazeLayout.render('member_spe', {main: ''});
-            }else{
+            } else {
                 FlowRouter.go('/');
             }
         }
@@ -60,9 +75,9 @@ if (Meteor.isClient) {
         name: 'member',
         action: function (params) {
 
-            if (Session.get('user_id') != null){
+            if (Session.get('user_id') != null) {
                 BlazeLayout.render('member', {main: ''});
-            }else{
+            } else {
                 FlowRouter.go('/');
             }
         }
