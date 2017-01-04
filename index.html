@@ -1,0 +1,32 @@
+<head>
+    <title>PLaylist</title>
+</head>
+
+<body>
+</body>
+
+<template name="home">
+    <br>
+    <input id="SubText" type="text">
+    <button id="ActionSub" class="btn btn-success" type="button">Se connecter</button>
+</template>
+
+<template name="member">
+    <br>
+    <input id="NewUser" type="text">
+    <button id="ActionNewUser" class="btn btn-success" type="button">Inscription</button>
+    <br>
+    <h1>Liste des membres</h1>
+    <ul>
+        {{#each all_eleves}}
+        <li> {{ name }} <button id="remove" data-id="{{ _id }}"> X </button> <button id="update" data-id="{{ _id }}"> U </button></li>
+        {{/each}}
+    </ul>
+    <br>
+    <div id="content-update" style="display: none">
+    Update : <span id="name"></span>
+    <br>
+    <input id="data-update" type="text">
+    <button id="save">Save Update</button>
+    </div>
+</template>
