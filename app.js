@@ -16,21 +16,33 @@ if (Meteor.isServer) {
 if (Meteor.isClient) {
 
     if (Meteor.userId()){
-        FlowRouter.go('member');
+        FlowRouter.go('');
+    }else{
+
     }
 
     FlowRouter.route('/', {
         name: 'home',
         action: function (params) {
-            console.log("This is the home page");
             BlazeLayout.render('home', {main: ''});
         }
     });
 
+
+    FlowRouter.route('/member/:_id', {
+        name: 'member_spe',
+        action: function (params) {
+            BlazeLayout.render('member_spe', {main: ''});
+            return member.findOne({_id: params._id});
+            
+        }
+    });
+
+
+
     FlowRouter.route('/member', {
         name: 'member',
         action: function (params) {
-            console.log("This is the member page");
             BlazeLayout.render('member', {main: ''});
 
             Template.member.helpers
@@ -72,6 +84,10 @@ if (Meteor.isClient) {
                     data = t.find("#NewUser");
                     member.insert({name: data.value});
                     data.value = '';
+                },
+
+                "click #spe": function (e, t) {
+                    FlowRouter.go('/member/' + this._id);
                 }
             });
         }

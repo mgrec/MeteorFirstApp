@@ -9,6 +9,12 @@
     {{> loginButtons}}
 </template>
 
+<template name="member_spe">
+    {{#each user}}
+    <h1>{{ name }}</h1>
+    {{/each}}
+</template>
+
 <template name="member">
     <br>
     <input id="NewUser" type="text">
@@ -17,7 +23,7 @@
     <h1>Liste des membres</h1>
     <ul>
         {{#each all_eleves}}
-        <li> {{ name }} <button id="remove" data-id="{{ _id }}"> X </button> <button id="update" data-id="{{ _id }}"> U </button></li>
+        <li> {{ name }} <button id="remove" data-id="{{ _id }}"> X </button> <button id="update" data-id="{{ _id }}"> U </button> <button id="spe" data-id="{{ _id }}"> V </button></li>
         {{/each}}
     </ul>
     <br>
