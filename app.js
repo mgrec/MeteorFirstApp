@@ -15,9 +15,9 @@ if (Meteor.isServer) {
 
 if (Meteor.isClient) {
 
-    if (Meteor.userId()){
+    if (Meteor.userId()) {
         FlowRouter.go('');
-    }else{
+    } else {
 
     }
 
@@ -32,78 +32,79 @@ if (Meteor.isClient) {
     FlowRouter.route('/member/:_id', {
         name: 'member_spe',
         action: function (params) {
-
-            Template.member_spe.helpers
-            ({
-                member: function () {
-                    return member.findOne({_id: params._id});
-                },
-            });
-
-            Template.member_spe.events
-            ({
-                "click #return": function () {
-                    FlowRouter.go('member');
-                }
-            });
-
+            Session.set( "member_id",  params._id );
             BlazeLayout.render('member_spe', {main: ''});
         }
     });
-
 
 
     FlowRouter.route('/member', {
         name: 'member',
         action: function (params) {
             BlazeLayout.render('member', {main: ''});
-
-            Template.member.helpers
-            ({
-                all_eleves: function () {
-                    return member.find();
-                }
-            });
-
-            Template.member.events
-            ({
-                "click #remove": function () {
-                    data = this._id;
-                    member.remove({_id: data})
-                },
-
-                "click #update": function (e, t) {
-                    dataId = this._id;
-                    dataName = this.name;
-                    document.getElementById("data-update").value = dataName;
-                    document.getElementById('content-update').style.display = "block";
-                    document.getElementById('name').innerHTML = dataName;
-                },
-
-                "click #save": function (e, t) {
-                    val = document.getElementById("data-update").value;
-                    document.getElementById('content-update').style.display = "none";
-                    console.log(dataName);
-                    member.update(
-                        {_id: dataId},
-                        {
-                            $set: {name: val}
-                        }
-                    );
-                    document.getElementById("data-update").value = '';
-                },
-
-                "click #ActionNewUser": function (e, t) {
-                    data = t.find("#NewUser");
-                    member.insert({name: data.value});
-                    data.value = '';
-                },
-
-                "click #spe": function (e, t) {
-                    FlowRouter.go('/member/' + this._id);
-                }
-            });
         }
     });
 
+
+    Template.member_spe.helpers
+    ({
+        member: function () {
+            return member.findOne({_id: Session.get( "member_id" )});
+        }
+    });
+
+    Template.member_spe.events
+    ({
+        "click #return": function () {
+            FlowRouter.go('member');
+        }
+    });
+
+    Template.member.helpers
+    ({
+        all_eleves: function () {
+            return member.find();
+        }
+    });
+
+    Template.member.events
+    ({
+        "click #remove": function () {
+            data = this._id;
+            member.remove({_id: data})
+        },
+
+        "click #update": function (e, t) {
+            dataId = this._id;
+            dataName = this.name;
+            document.getElementById("data-update").value = dataName;
+            document.getElementById('content-update').style.display = "block";
+            document.getElementById('name').innerHTML = dataName;
+        },
+
+        "click #save": function (e, t) {
+            val = document.getElementById("data-update").value;
+            document.getElementById('content-update').style.display = "none";
+            console.log(dataName);
+            member.update(
+                {_id: dataId},
+                {
+                    $set: {name: val}
+                }
+            );
+            document.getElementById("data-update").value = '';
+        },
+
+        "click #ActionNewUser": function (e, t) {
+
+            data = t.find("#NewUser");
+            console.log(data.value);
+            member.insert({name: data.value});
+            data.value = '';
+        },
+
+        "click #spe": function (e, t) {
+            FlowRouter.go('/member/' + this._id);
+        }
+    });
 }
