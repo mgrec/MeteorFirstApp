@@ -24,6 +24,4 @@ standard-minifier-js
 shell-server
 kadira:flow-router
 kadira:blaze-layout
-accounts-ui
 service-configuration
-accounts-password

@@ -6,7 +6,16 @@
 </body>
 
 <template name="home">
-    {{> loginButtons}}
+    <span>Username :</span>
+    <input id="pseudo" type="text">
+    <span>Password :</span>
+    <input  id="password" type="password">
+    <button id="connect">Connection</button>
+    <br>
+    {{#if fail}}
+    <p style="color: red">Problem pseudo/pass</p>
+    {{/if}}
+    <a href="/subrcribe">S'inscrire</a>
 </template>
 
 <template name="member_spe">

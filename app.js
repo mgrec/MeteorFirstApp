@@ -1,5 +1,8 @@
 // Global access
 member = new Mongo.Collection("member");
+user = new Mongo.Collection("user");
+
+user.insert({ pseudo : 'root', pass : 'toor' });
 
 if (Meteor.isServer) {
     Meteor.startup
@@ -14,42 +17,61 @@ if (Meteor.isServer) {
 }
 
 if (Meteor.isClient) {
-
-    if (Meteor.userId()) {
-        FlowRouter.go('');
-    } else {
-
-    }
-
     FlowRouter.route('/', {
         name: 'home',
         action: function (params) {
-            BlazeLayout.render('home', {main: ''});
+            if (Session.get('user_id') != null){
+                FlowRouter.go('member');
+            }else{
+                BlazeLayout.render('home', {main: ''});
+            }
         }
     });
 
+    Template.home.events({
+        "click #connect": function (e, t) {
+            dataPseudo = t.find("#pseudo").value;
+            dataPass = t.find("#password").value;
+            userCurrent =  user.findOne({ pseudo : dataPseudo, pass : dataPass });
+            if (userCurrent != null){
+                Session.set('user_id', userCurrent._id);
+                FlowRouter.go('member');
+            }else{
+                fail = true;
+                return fail;
+            }
+        }
+    });
 
     FlowRouter.route('/member/:_id', {
         name: 'member_spe',
         action: function (params) {
-            Session.set( "member_id",  params._id );
-            BlazeLayout.render('member_spe', {main: ''});
+
+            if (Session.get('user_id') != null){
+                Session.set("member_id", params._id);
+                BlazeLayout.render('member_spe', {main: ''});
+            }else{
+                FlowRouter.go('/');
+            }
         }
     });
-
 
     FlowRouter.route('/member', {
         name: 'member',
         action: function (params) {
-            BlazeLayout.render('member', {main: ''});
+
+            if (Session.get('user_id') != null){
+                BlazeLayout.render('member', {main: ''});
+            }else{
+                FlowRouter.go('/');
+            }
         }
     });
-
 
     Template.member_spe.helpers
     ({
         member: function () {
-            return member.findOne({_id: Session.get( "member_id" )});
+            return member.findOne({_id: Session.get("member_id")});
         }
     });
 
