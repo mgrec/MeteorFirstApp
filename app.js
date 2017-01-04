@@ -32,9 +32,22 @@ if (Meteor.isClient) {
     FlowRouter.route('/member/:_id', {
         name: 'member_spe',
         action: function (params) {
+
+            Template.member_spe.helpers
+            ({
+                member: function () {
+                    return member.findOne({_id: params._id});
+                },
+            });
+
+            Template.member_spe.events
+            ({
+                "click #return": function () {
+                    FlowRouter.go('member');
+                }
+            });
+
             BlazeLayout.render('member_spe', {main: ''});
-            return member.findOne({_id: params._id});
-            
         }
     });
 
