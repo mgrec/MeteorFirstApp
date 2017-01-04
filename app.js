@@ -1,5 +1,6 @@
 // Global access
 member = new Mongo.Collection("member");
+
 if (Meteor.isServer) {
     Meteor.startup
     (
@@ -13,6 +14,10 @@ if (Meteor.isServer) {
 }
 
 if (Meteor.isClient) {
+
+    if (Meteor.userId()){
+        FlowRouter.go('member');
+    }
 
     FlowRouter.route('/', {
         name: 'home',
